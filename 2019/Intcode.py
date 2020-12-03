@@ -1,5 +1,5 @@
 class Intcode:
-    def __init__(self, code, inputs):
+    def __init__(self, code, inputs = [], returnMode = False):
         self.inputs = inputs
         self.code = code
         for i in range(0,10000):
@@ -8,12 +8,18 @@ class Intcode:
         self.inputLocation = 0
         self.outs = []
         self.relativeBase = 0
-        
+        self.returnMode = returnMode
+
+    def resetAndRun(self, inputs):
+        self.inputs = inputs
+        self.inputLocation = 0
+        return self.runCode()
+    
     def runCode(self):
         #runs through the program, until we reach a 99.
         #pointer incrementation is handled by individiual methods
         
-        while self.code[self.i] != 99:
+        while True:
             opcode = int(str(self.code[self.i])[-2:])
             modes = str(self.code[self.i])[:-2]
             if opcode == 1:
@@ -23,7 +29,9 @@ class Intcode:
             elif opcode ==3:
                 self.set(modes, self.code[self.i+1])
             elif opcode == 4:
-                self.output(modes, self.code[self.i+ 1])
+                out = self.output(modes, self.code[self.i+ 1])
+                if self.returnMode:
+                    break
             elif opcode == 5:
                 self.jIfTrue(modes, self.code[self.i+1], self.code[self.i+2])
             elif opcode == 6:
@@ -35,10 +43,13 @@ class Intcode:
             elif opcode == 9:
                 self.relative(modes, self.code[self.i+1])
             elif opcode == 99:
+                out = "done"
                 break
             else:
                 print("opcode error")
-
+        
+        if(self.returnMode):
+            return out
         return self.outs
                 
     def paramatize(self, mode, value):
@@ -98,6 +109,9 @@ class Intcode:
         #print("i equals " + str(self.i))
         self.outs.append(out)
         self.i+=2
+        if(self.returnMode):
+            return out
+
 
     def jIfTrue(self, modes, test, jumpLocation):
         modes = self.padModes(modes,2)

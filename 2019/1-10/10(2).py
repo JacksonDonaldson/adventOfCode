@@ -24,7 +24,9 @@ ast = 11
 if field[belt][ast] == "#":
     #found an asteroid. now find number of asteroids visable from it
     aboveTans = []
+    aTanLoc = {}
     belowTans = []
+    bTanLoc = []
     visible = 0
     posHorizontal = True
     negHorizontal = True
@@ -40,6 +42,7 @@ if field[belt][ast] == "#":
                 if y > 0:
                     if div(x,y) not in aboveTans:
                         aboveTans.append(div(x,y))
+                        aTanLoc[str(div(x,y))] = [x,y];
                         visible +=1
                 elif y < 0:
                     if div(x,y) not in belowTans:
@@ -55,6 +58,7 @@ if field[belt][ast] == "#":
                         #print("negative horizontal")
                         negHorizontal = False
                         visible +=1
+
 aboveTans.sort()
 belowTans.sort()
 belowTans.reverse()
@@ -70,5 +74,6 @@ aboveTans.sort()
 aboveTans.reverse()
 i = 200 - dest -1
 print(aboveTans[i])
-
-    
+#this is very scuffed
+#but this gets the relative location of the right asteroid
+print(aTanLoc[str(aboveTans[-27])])
