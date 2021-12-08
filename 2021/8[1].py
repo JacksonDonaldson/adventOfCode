@@ -16,6 +16,20 @@ def findPossible(signal, digits):
                 possible.append([0,1,4,6])
             else:
                 possible.append([0,1,2,3,4,5,6])
+        else:
+            if len(value) == 2:
+                possible.append([2,3,4,5,6])
+            elif len(value) == 3:
+                possible.append([2,3,4,6])
+            elif len(value) == 4:
+                possible.append([2,3,5])
+            elif len(value) == 5:
+                possible.append([0,1,3,4])
+            elif len(value) == 6:
+                possible.append([0,3,6])
+            else:
+                print("bad")
+            
 
 
     appear = possible[0]
@@ -58,17 +72,61 @@ def findSingles(l):
                     l[i].remove(k)
     return l
 
+def decimify(n,l):
+    ans = []
+    for letter in n:
+        ans.append(l["abcdefg".index(letter)])
+    ans.sort()
+    #print(ans)
+    ans = [i[0] for i in ans]
+    if ans == [0,1]:
+        return "1"
+    if ans == [0,1,5]:
+        return "7"
+    if ans == [0,1,2,3,4,5]:
+        return "0"
+    if ans == [0,1,4,6]:
+        return "4"
+    if ans == [0,2,3,5,6]:
+        return "2"
+    if ans == [0,1,2,5,6]:
+        return "3"
+    if ans == [1,2,4,5,6]:
+        return "5"
+    if ans == [1,2,3,4,5,6]:
+        return "6"
+    if ans == [0,1,2,3,4,5,6]:
+        return "8"
+    if ans == [0,1,2,4,5,6]:
+        return "9"
+    print("BAD")
+    
+def translate(l, nums):
+    #print(l)
+    res = ""
+    for n in nums:
+        res += decimify(n,l)
+    return int(res)
+        
 def decode(r):
+    #print(r)
     starts = r[0]
     ends = r[1]
     l = []
+    total = 0
     for signal in "abcdefg":
+        #print(signal)
+        #print(starts + ends)
         l.append(findPossible(signal, starts + ends))
         l=findPairs(l)
         l = findSingles(l)
         l = findPairs(l)
-    return l    
+   # print(l)
+        
+    total += translate(l, ends)
+    return total
+    #return l    
 total = 0
 for r in l:
-    decode(r)
+    total += int(decode(r))
 print(total)
