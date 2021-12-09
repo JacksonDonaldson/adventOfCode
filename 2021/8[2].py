@@ -4,9 +4,16 @@ l = [i.split(" | ") for i in l]
 for i in range(len(l)):
     l[i] = [k.split() for k in l[i]]
 
+
+#given a signal (a,b,c, ect), and a set of digits returns the positions that digit could possibly occupy
 def findPossible(signal, digits):
     possible = []
+
+    #for each digit in the row, look at its length
+    #the numbers correspond to segments going around the display counterclockwise starting from the top right, with the middle segment being 6
+    
     for value in digits:
+        #if signal appears, then it must correspond to one of the segments that can light up with that length of value
         if signal in value:
             if len(value) == 2:
                 possible.append([0,1])
@@ -16,6 +23,8 @@ def findPossible(signal, digits):
                 possible.append([0,1,4,6])
             else:
                 possible.append([0,1,2,3,4,5,6])
+
+        #if it doesn't appear, then it must be one of the segments that can not light up, given that length
         else:
             if len(value) == 2:
                 possible.append([2,3,4,5,6])
@@ -31,7 +40,7 @@ def findPossible(signal, digits):
                 print("bad")
             
 
-
+    #knock down possible places because a value has to be in every list in possible to be valid
     appear = possible[0]
     for p in possible:
         toRemove = []
@@ -40,8 +49,11 @@ def findPossible(signal, digits):
                 toRemove.append(a)
         for r in toRemove:
             appear.remove(r)
+
+    
     return appear
 
+#if a pair of values (like 2 signals that can just be 0 & 1) appears, remove those values from all other places
 def findPairs(l):
     toRemove = []
     for v in l:
@@ -57,6 +69,7 @@ def findPairs(l):
                     l[i].remove(v[1])
     return l
 
+#remove known segments from all other locations
 def findSingles(l):
     known = []
     for i in range(len(l)):
@@ -72,6 +85,7 @@ def findSingles(l):
                     l[i].remove(k)
     return l
 
+#translate back to decimal, given the map l generated earlier
 def decimify(n,l):
     ans = []
     for letter in n:
@@ -100,28 +114,37 @@ def decimify(n,l):
     if ans == [0,1,2,4,5,6]:
         return "9"
     print("BAD")
-    
+
+#translate each number in the output
 def translate(l, nums):
     #print(l)
     res = ""
     for n in nums:
         res += decimify(n,l)
     return int(res)
-        
+
+
+#takes in a row, and decodes it
 def decode(r):
-    #print(r)
+    
     starts = r[0]
     ends = r[1]
+    
     l = []
     total = 0
+
+    #for each signal, find out where it can be then add the constraints of pairs & singles
     for signal in "abcdefg":
         #print(signal)
         #print(starts + ends)
+
+        
         l.append(findPossible(signal, starts + ends))
         l=findPairs(l)
         l = findSingles(l)
         l = findPairs(l)
-   # print(l)
+
+   #this leaves a list where the first position is a number that represents "a"'s location, the second represents "b"'s location, and so on
         
     total += translate(l, ends)
     return total
