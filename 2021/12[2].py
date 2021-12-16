@@ -27,6 +27,8 @@ def findWays(value,taken, takeTwice):
 
                 total += findWays(go,taken,takeTwice)
     return total
+
+
 general = findWays("start",[],"")
 total = general
 for key in d:
