@@ -174,8 +174,17 @@ while "?" in realPositions:
                 except:
                     print("error")
                     tryLater.append([scanner1,scanner2])
-print(len(beaconLocations))
 
+def manhat(p1, p2):
+    total = 0
+    for i in [0,1,2]:
+        total += abs(p1[i]-p2[i])
+    return total
+maxMan = 0
+for location in range(len(realPositions)):
+    for location2 in range(location + 1, len(realPositions)):
+        maxMan = max(manhat(realPositions[location], realPositions[location2]), maxMan)
+print(maxMan)
 #ans < 438
 
 
