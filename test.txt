@@ -1,0 +1,1 @@
+wget --load-cookies C:/mystuff/testCook.txt -O 7.txt https://adventofcode.com/2022/day/7/input
