@@ -1,0 +1,6 @@
+*.o
+*.lock
+*.d
+*.bin
+*.lock
+*/target
